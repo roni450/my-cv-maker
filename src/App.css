@@ -1,0 +1,31 @@
+import React, { useRef, useState } from "react";
+import ResumeForm from "./components/ResumeForm";
+import ResumePreview from "./components/ResumePreview";
+import { useReactToPrint } from "react-to-print";
+
+export default function App() {
+  const [formData, setFormData] = useState({ name: "", email: "", about: "" });
+  const previewRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => previewRef.current,
+    documentTitle: formData.name || "My Resume",
+  });
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white p-10 flex flex-col md:flex-row gap-10 items-start justify-center">
+      <div className="md:w-1/2 w-full">
+        <ResumeForm formData={formData} setFormData={setFormData} />
+      </div>
+      <div className="md:w-1/2 w-full flex flex-col items-center">
+        <ResumePreview formData={formData} ref={previewRef} />
+        <button
+          onClick={handlePrint}
+          className="mt-8 bg-blue-600 text-white px-8 py-3 rounded-full shadow-lg hover:bg-blue-700 transition"
+        >
+          Download as PDF
+        </button>
+      </div>
+    </div>
+  );
+}
